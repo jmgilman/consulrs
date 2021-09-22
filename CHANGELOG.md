@@ -12,5 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release
 
-[unreleased]: https://github.com/jmgilman/dockertest-server/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/jmgilman/dockertest-server/releases/tag/v0.1.0
+[unreleased]: https://github.com/jmgilman/consulrs/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/jmgilman/consulrs/releases/tag/v0.1.0

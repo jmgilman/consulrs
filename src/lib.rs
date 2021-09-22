@@ -19,7 +19,7 @@
 //! ## Installation
 //!
 //! Add `project-name` as a dependency to your cargo.toml:
-//! ```
+//! ```ignore
 //! [dependencies]
 //! project-name = "0.1.0"
 //! ```
@@ -31,3 +31,10 @@
 //! ## Testing
 //!
 //! Run tests with `cargo test`.
+
+#[macro_use]
+extern crate tracing;
+
+pub mod api;
+pub mod client;
+pub mod error;

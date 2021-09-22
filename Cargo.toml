@@ -1,0 +1,12 @@
+[package]
+name = "project-name"
+version = "0.1.0"
+authors = ["Joshua Gilman <joshuagilman@gmail.com>"]
+description = "A short summary of the project."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/jmgilman/project-name"
+keywords = ["some", "keywords"]
+edition = "2018"
+
+[dependencies]

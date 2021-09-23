@@ -218,7 +218,7 @@ impl ConsulClientSettingsBuilder {
 
     fn default_verify(&self) -> bool {
         info!("Checking TLS verification using $CONSUL_HTTP_SSL_VERIFY");
-        let verify = env::var("CONSUL_HTTP_SSL_VERIFY").unwrap_or("true".into());
+        let verify = env::var("CONSUL_HTTP_SSL_VERIFY").unwrap_or_else(|_| "true".into());
         match verify.as_str() {
             "true" => true,
             "false" => false,

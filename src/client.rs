@@ -15,6 +15,11 @@ pub trait Client: Send + Sync + Sized {
     fn settings(&self) -> &ConsulClientSettings;
 }
 
+/// A client which can be used to execute calls against a Consul server.
+///
+/// A consul client is configured using [ConsulClientSettings] and will
+/// automatically configure a backing instance of a [HTTPClient] which is
+/// used for executing [Endpoints][rustify::endpoint::Endpoint].
 pub struct ConsulClient {
     pub http: HTTPClient,
     pub middle: EndpointMiddleware,
@@ -105,6 +110,20 @@ impl ConsulClient {
     }
 }
 
+/// Contains settings for configuring a [ConsulClient].
+///
+/// Most settings that are not directly configured will have their default value
+/// pulled from their respective environment variables. Specifically:
+///
+/// * `address`: CONSUL_HTTP_ADDR
+/// * `ca_certs`: CONSUL_CACERT / CONSUL_CAPATH
+/// * `client_cert`: CONSUL_CLIENT_CERT
+/// * `client_key`: CONSUL_CLIENT_KEY
+/// * `token`: CONSUL_HTTP_TOKEN
+/// * `verify`: CONSUL_HTTP_SSL_VERIFY
+///
+/// Note that the client key must be in an RSA or PKCS#8 format, otherwise the
+/// client will fail to be created with a "key not found" error.
 #[derive(Builder, Clone, Debug)]
 #[builder(setter(into, strip_option))]
 pub struct ConsulClientSettings {

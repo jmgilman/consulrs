@@ -61,6 +61,30 @@ impl ConsulClient {
             http_client = http_client.add_root_certificate(cert);
         }
 
+        // Add client certificate
+        if let (Some(cert), Some(key)) = (&settings.client_cert, &settings.client_key) {
+            let cert_content =
+                std::fs::read_to_string(&cert).map_err(|e| ClientError::FileReadError {
+                    source: e,
+                    path: cert.clone(),
+                })?;
+            let key_content =
+                std::fs::read_to_string(&key).map_err(|e| ClientError::FileReadError {
+                    source: e,
+                    path: key.clone(),
+                })?;
+            let pem = format!("{}{}", cert_content, key_content);
+            let id = reqwest::Identity::from_pem(pem.as_bytes()).map_err(|e| {
+                ClientError::ParseCertificateError {
+                    source: e,
+                    path: cert.clone(),
+                }
+            })?;
+
+            info!("Importing client certificate from {}", cert);
+            http_client = http_client.identity(id);
+        }
+
         // Configures middleware for endpoints to append API version and token
         debug!("Using API version {}", settings.version);
         let version_str = format!("v{}", settings.version);
@@ -81,19 +105,17 @@ impl ConsulClient {
     }
 }
 
-#[derive(Clone, Debug)]
-pub struct ClientCertificate {
-    pub data: Vec<u8>,
-    pub password: String,
-}
-
 #[derive(Builder, Clone, Debug)]
+#[builder(setter(into, strip_option))]
 pub struct ConsulClientSettings {
-    #[builder(setter(into), default = "self.default_address()")]
+    #[builder(default = "self.default_address()")]
     pub address: String,
     #[builder(default = "self.default_ca_certs()")]
     pub ca_certs: Vec<String>,
-    pub client_cert: Option<ClientCertificate>,
+    #[builder(default = "self.default_client_cert()")]
+    pub client_cert: Option<String>,
+    #[builder(default = "self.default_client_key()")]
+    pub client_key: Option<String>,
     #[builder(setter(into), default = "self.default_token()")]
     pub token: Option<String>,
     #[builder(default = "self.default_verify()")]
@@ -134,6 +156,32 @@ impl ConsulClientSettingsBuilder {
         }
 
         paths
+    }
+
+    fn default_client_cert(&self) -> Option<String> {
+        match env::var("CONSUL_CLIENT_CERT") {
+            Ok(s) => {
+                info!("Using TLS client certificate from $CONSUL_CLIENT_CERT");
+                Some(s)
+            }
+            Err(_) => {
+                debug!("Not using a TLS client certificate");
+                None
+            }
+        }
+    }
+
+    fn default_client_key(&self) -> Option<String> {
+        match env::var("CONSUL_CLIENT_KEY") {
+            Ok(s) => {
+                info!("Using TLS client key from $CONSUL_CLIENT_KEY");
+                Some(s)
+            }
+            Err(_) => {
+                debug!("Not using a TLS client key");
+                None
+            }
+        }
     }
 
     fn default_token(&self) -> Option<String> {

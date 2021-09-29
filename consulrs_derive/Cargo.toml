@@ -1,0 +1,19 @@
+[package]
+name = "consulrs_derive"
+version = "0.1.0"
+authors = ["Joshua Gilman <joshuagilman@gmail.com>"]
+description = "A derive macro for implementing query options for Consul endpoints"
+license = "MIT"
+repository = "https://github.com/jmgilman/consulrs"
+edition = "2018"
+
+[lib]
+proc-macro = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+syn = "1.0"
+quote = "1.0"
+synstructure = "0.12.5"
+proc-macro2 = "1.0.28"

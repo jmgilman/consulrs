@@ -3,13 +3,19 @@ use derive_builder::Builder;
 use rustify::clients::reqwest::Client as HTTPClient;
 use std::{env, fs};
 
-use crate::{api::EndpointMiddleware, error::ClientError};
+use crate::{
+    api::{EndpointMiddleware, Features},
+    error::ClientError,
+};
 
 /// The client interface capabale of interacting with API functions
 #[async_trait]
 pub trait Client: Send + Sync + Sized {
     /// Returns the underlying HTTP client being used for API calls
     fn http(&self) -> &HTTPClient;
+
+    /// Returns the middleware to be used when executing API calls
+    fn middle(&self, features: Option<Features>) -> EndpointMiddleware;
 
     /// Returns the settings used to configure this client
     fn settings(&self) -> &ConsulClientSettings;
@@ -22,7 +28,6 @@ pub trait Client: Send + Sync + Sized {
 /// used for executing [Endpoints][rustify::endpoint::Endpoint].
 pub struct ConsulClient {
     pub http: HTTPClient,
-    pub middle: EndpointMiddleware,
     pub settings: ConsulClientSettings,
 }
 
@@ -30,6 +35,15 @@ pub struct ConsulClient {
 impl Client for ConsulClient {
     fn http(&self) -> &HTTPClient {
         &self.http
+    }
+
+    fn middle(&self, features: Option<Features>) -> EndpointMiddleware {
+        let version_str = format!("v{}", self.settings.version);
+        EndpointMiddleware {
+            features,
+            token: self.settings.token.clone(),
+            version: version_str,
+        }
     }
 
     fn settings(&self) -> &ConsulClientSettings {
@@ -92,21 +106,12 @@ impl ConsulClient {
 
         // Configures middleware for endpoints to append API version and token
         debug!("Using API version {}", settings.version);
-        let version_str = format!("v{}", settings.version);
-        let middle = EndpointMiddleware {
-            token: settings.token.clone(),
-            version: version_str,
-        };
 
         let http_client = http_client
             .build()
             .map_err(|e| ClientError::RestClientBuildError { source: e })?;
         let http = HTTPClient::new(settings.address.as_str(), http_client);
-        Ok(ConsulClient {
-            settings,
-            middle,
-            http,
-        })
+        Ok(ConsulClient { settings, http })
     }
 }
 

@@ -10,8 +10,12 @@ use serde::de::DeserializeOwned;
 
 pub use crate::api::features::Features;
 
+pub mod catalog;
+pub mod check;
+pub mod connect;
 pub mod features;
 pub mod kv;
+pub mod service;
 
 #[derive(Builder, Debug)]
 #[builder(pattern = "owned")]

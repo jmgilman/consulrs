@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
-use crate::api::{check::responses::CheckResponse, connect::responses::ProxyResponse};
+use crate::api::{
+    check::responses::{AgentCheckResponse, CheckResponse},
+    connect::responses::ProxyResponse,
+};
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
@@ -30,6 +33,14 @@ pub struct ServiceResponse {
     pub tagged_addresses: Option<HashMap<String, String>>,
     pub tags: Option<Vec<String>>,
     pub weights: Option<WeightsResponse>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
+pub struct ServiceCheckResponse {
+    aggregated_status: String,
+    service: ServiceResponse,
+    checks: Vec<AgentCheckResponse>,
 }
 
 #[derive(Deserialize, Debug)]

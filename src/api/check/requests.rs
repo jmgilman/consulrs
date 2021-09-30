@@ -1,11 +1,33 @@
 use crate::api::Features;
 
+use super::responses::AgentCheckResponse;
 use consulrs_derive::QueryEndpoint;
 use derive_builder::Builder;
 use rustify_derive::Endpoint;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 use std::{collections::HashMap, fmt::Debug};
+
+/// ## List Checks
+/// This endpoint returns all checks that are registered with the local agent.
+///
+/// * Path: agent/checks
+/// * Method: GET
+/// * Response: [HashMap<String, AgentCheckResponse>]
+/// * Reference: https://www.consul.io/api-docs/catalog#list-services-for-node
+#[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
+#[endpoint(
+    path = "agent/checks",
+    response = "HashMap<String, AgentCheckResponse>",
+    builder = "true"
+)]
+#[builder(setter(into, strip_option), default)]
+pub struct ListChecksRequest {
+    #[endpoint(skip)]
+    pub features: Option<Features>,
+    #[endpoint(query)]
+    pub ns: Option<String>,
+}
 
 /// ## Register Check
 /// This endpoint adds a new service, with optional health checks, to the local
@@ -59,6 +81,133 @@ pub struct RegisterCheckRequest {
     pub tls_skip_verify: Option<String>,
     #[serde(rename = "TTL")]
     pub ttl: Option<String>,
+}
+
+/// ## Deregister Check
+/// This endpoint remove a check from the local agent.
+///
+/// * Path: agent/check/deregister/{self.check}
+/// * Method: PUT
+/// * Response: N/A
+/// * Reference: https://www.consul.io/api-docs/agent/check#deregister-check
+#[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
+#[endpoint(
+    path = "agent/check/deregister/{self.check}",
+    method = "PUT",
+    builder = "true"
+)]
+#[builder(setter(into, strip_option), default)]
+pub struct DeregisterCheckRequest {
+    #[endpoint(skip)]
+    pub features: Option<Features>,
+    #[endpoint(skip)]
+    pub check: String,
+    #[endpoint(query)]
+    pub ns: Option<String>,
+}
+
+/// ## TTL Check Pass
+/// This endpoint is used with a TTL type check to set the status of the check
+/// to passing and to reset the TTL clock.
+///
+/// * Path: agent/check/pass/{self.check}
+/// * Method: PUT
+/// * Response: N/A
+/// * Reference: https://www.consul.io/api-docs/agent/check#ttl-check-pass
+#[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
+#[endpoint(
+    path = "agent/check/pass/{self.check}",
+    method = "PUT",
+    builder = "true"
+)]
+#[builder(setter(into, strip_option), default)]
+pub struct TtlCheckPassRequest {
+    #[endpoint(skip)]
+    pub features: Option<Features>,
+    #[endpoint(skip)]
+    pub check: String,
+    pub note: Option<String>,
+    #[endpoint(query)]
+    pub ns: Option<String>,
+}
+
+/// ## TTL Check Warn
+/// This endpoint is used with a TTL type check to set the status of the check
+/// to warning and to reset the TTL clock.
+///
+/// * Path: agent/check/warn/{self.check}
+/// * Method: PUT
+/// * Response: N/A
+/// * Reference: https://www.consul.io/api-docs/agent/check#ttl-check-warn
+#[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
+#[endpoint(
+    path = "agent/check/warn/{self.check}",
+    method = "PUT",
+    builder = "true"
+)]
+#[builder(setter(into, strip_option), default)]
+pub struct TtlCheckWarnRequest {
+    #[endpoint(skip)]
+    pub features: Option<Features>,
+    #[endpoint(skip)]
+    pub check: String,
+    pub note: Option<String>,
+    #[endpoint(query)]
+    pub ns: Option<String>,
+}
+
+/// ## TTL Check Fail
+/// This endpoint is used with a TTL type check to set the status of the check
+/// to critical and to reset the TTL clock.
+///
+/// * Path: agent/check/fail/{self.check}
+/// * Method: PUT
+/// * Response: N/A
+/// * Reference: https://www.consul.io/api-docs/agent/check#ttl-check-fail
+#[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
+#[endpoint(
+    path = "agent/check/fail/{self.check}",
+    method = "PUT",
+    builder = "true"
+)]
+#[builder(setter(into, strip_option), default)]
+pub struct TtlCheckFailRequest {
+    #[endpoint(skip)]
+    pub features: Option<Features>,
+    #[endpoint(skip)]
+    pub check: String,
+    pub note: Option<String>,
+    #[endpoint(query)]
+    pub ns: Option<String>,
+}
+
+/// ## TTL Check Update
+/// This endpoint is used with a TTL type check to set the status of the check
+/// and to reset the TTL clock.
+///
+/// * Path: agent/check/update/{self.check}
+/// * Method: PUT
+/// * Response: N/A
+/// * Reference: https://www.consul.io/api-docs/agent/check#ttl-check-update
+#[derive(Builder, Debug, Default, Endpoint, QueryEndpoint, Serialize)]
+#[endpoint(
+    path = "agent/check/update/{self.check}",
+    method = "PUT",
+    builder = "true"
+)]
+#[builder(setter(into, strip_option), default)]
+pub struct TtlCheckUpdateRequest {
+    #[endpoint(skip)]
+    #[serde(skip)]
+    pub features: Option<Features>,
+    #[endpoint(skip)]
+    pub check: String,
+    #[endpoint(query)]
+    pub ns: Option<String>,
+    #[serde(rename = "Output")]
+    pub output: Option<String>,
+    #[serde(rename = "Status")]
+    pub status: Option<String>,
 }
 
 #[skip_serializing_none]

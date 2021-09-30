@@ -36,6 +36,7 @@
 extern crate tracing;
 
 pub mod api;
+pub mod catalog;
 pub mod client;
 pub mod error;
 pub mod kv;

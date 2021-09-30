@@ -41,3 +41,4 @@ pub mod check;
 pub mod client;
 pub mod error;
 pub mod kv;
+pub mod service;

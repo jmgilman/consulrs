@@ -4,7 +4,7 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum ClientError {
     #[error("The Consul server returned an error (status code {code})")]
-    APIError { code: u16 },
+    APIError { code: u16, message: Option<String> },
     #[error("Failed decoding Base64 response")]
     Base64DecodeError { source: base64::DecodeError },
     #[error("Error reading file: {path}")]

@@ -106,6 +106,27 @@ impl MiddleWare for EndpointMiddleware {
 ///
 /// Any errors which occur in execution are wrapped in a
 /// [ClientError::RestClientError] and propagated.
+pub async fn exec_with_empty<E>(
+    client: &impl Client,
+    endpoint: E,
+) -> Result<ApiResponse<()>, ClientError>
+where
+    E: Endpoint<Response = ()> + FeaturedEndpoint,
+{
+    info!("Executing {} and expecting no response", endpoint.path());
+    let features = endpoint.features();
+    endpoint
+        .with_middleware(&client.middle(features))
+        .exec(client.http())
+        .await
+        .map_err(parse_err)
+        .map(parse_empty)?
+}
+
+/// Executes an [Endpoint] and returns the raw response body.
+///
+/// Any errors which occur in execution are wrapped in a
+/// [ClientError::RestClientError] and propagated.
 pub async fn exec_with_raw<E>(
     client: &impl Client,
     endpoint: E,
@@ -113,7 +134,7 @@ pub async fn exec_with_raw<E>(
 where
     E: Endpoint + FeaturedEndpoint,
 {
-    info!("Executing {} and expecting no response", endpoint.path());
+    info!("Executing {} and expecting a response", endpoint.path());
     let features = endpoint.features();
     endpoint
         .with_middleware(&client.middle(features))
@@ -157,6 +178,14 @@ where
 
     let response = result.parse().map_err(ClientError::from)?;
     builder = builder.response(response);
+    Ok(builder.build().unwrap())
+}
+
+/// Parses an [EndpointResult], turning it into an [ApiResponse].
+fn parse_empty(result: EndpointResult<()>) -> Result<ApiResponse<()>, ClientError> {
+    let mut builder = parse_headers(result.response.headers());
+
+    builder = builder.response(());
     Ok(builder.build().unwrap())
 }
 
@@ -208,8 +237,10 @@ where
 /// Extracts any API errors found and converts them to [ClientError::APIError].
 fn parse_err(e: RestClientError) -> ClientError {
     if let RestClientError::ServerResponseError { code, content } = &e {
-        dbg!(content);
-        ClientError::APIError { code: *code }
+        ClientError::APIError {
+            code: *code,
+            message: content.clone(),
+        }
     } else {
         ClientError::from(e)
     }

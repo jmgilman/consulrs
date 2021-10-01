@@ -21,7 +21,7 @@ fn test() {
         test_set(&client, key).await;
         test_keys(&client).await;
         test_read(&client, key).await;
-        test_raw(&client, key).await;
+        test_read_raw(&client, key).await;
         test_delete(&client, key).await;
         test_json(&client, key).await;
     });
@@ -51,8 +51,8 @@ async fn test_keys(client: &impl Client) {
     assert!(res.is_ok());
 }
 
-async fn test_raw(client: &impl Client, key: &str) {
-    let res = kv::raw(client, key, None).await;
+async fn test_read_raw(client: &impl Client, key: &str) {
+    let res = kv::read_raw(client, key, None).await;
     assert!(res.is_ok());
 }
 

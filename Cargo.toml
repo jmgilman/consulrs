@@ -26,7 +26,7 @@ tracing = "0.1.28"
 url = "2.2.2"
 
 [dev-dependencies]
-dockertest-server = { version = "0.1.3", features=["hashi"] }
+dockertest-server = { version = "0.1.4", features=["hashi"] }
 env_logger = "0.9.0"
 test-env-log = { version = "0.2.7", features = ["trace"] }
 tracing-subscriber = {version = "0.2.17", default-features = false, features = ["env-filter", "fmt"]}

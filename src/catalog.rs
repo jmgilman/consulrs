@@ -4,6 +4,7 @@ use crate::{
     api::{
         self,
         catalog::{
+            common::{CatalogService, Node},
             requests::{
                 DeregisterEntityRequest, DeregisterEntityRequestBuilder, ListDatacentersRequest,
                 ListDatacentersRequestBuilder, ListGatewayServicesRequest,
@@ -16,7 +17,6 @@ use crate::{
             },
             responses::{
                 GatewayServiceResponse, ListNodeServicesResponse, ListNodesForServiceResponse,
-                NodeResponse,
             },
         },
         ApiResponse,
@@ -87,7 +87,7 @@ pub async fn node(
 pub async fn nodes(
     client: &impl Client,
     opts: Option<&mut ListNodesRequestBuilder>,
-) -> Result<ApiResponse<Vec<NodeResponse>>, ClientError> {
+) -> Result<ApiResponse<Vec<Node>>, ClientError> {
     let mut t = ListNodesRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).build().unwrap();
     api::exec_with_result(client, endpoint).await
@@ -101,7 +101,7 @@ pub async fn nodes_with_service(
     client: &impl Client,
     service: &str,
     opts: Option<&mut ListNodesForServiceRequestBuilder>,
-) -> Result<ApiResponse<Vec<ListNodesForServiceResponse>>, ClientError> {
+) -> Result<ApiResponse<Vec<CatalogService>>, ClientError> {
     let mut t = ListNodesForServiceRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).service(service).build().unwrap();
     api::exec_with_result(client, endpoint).await

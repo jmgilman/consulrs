@@ -1,6 +1,6 @@
 mod common;
 
-use common::{ConsulServer, ConsulServerHelper};
+use common::{ConsulServer, ConsulServerHelper, CountingServer};
 use consulrs::{client::Client, service};
 use test_env_log::test;
 
@@ -9,15 +9,16 @@ fn test() {
     let test = common::new_test();
     test.run(|instance| async move {
         let server: ConsulServer = instance.server();
+        let counting: CountingServer = instance.server();
         let client = server.client();
-        let name = "test";
+        let service = common::setup(&client, &counting).await;
 
-        test_register(&client, name).await;
+        test_register(&client, "test").await;
         test_list(&client).await;
-        test_read(&client, name).await;
-        test_health(&client, name).await;
-        test_maintenance(&client, name).await;
-        test_deregister(&client, name).await;
+        test_read(&client, &service.name).await;
+        test_health(&client, &service.name).await;
+        test_maintenance(&client, &service.name).await;
+        test_deregister(&client, &service.name).await;
     });
 }
 

@@ -1,5 +1,8 @@
-use super::responses::{ServiceCheckResponse, ServiceResponse};
-use crate::api::{check::requests::RegisterCheckRequest, Features};
+use super::common::{
+    AgentService, AgentServiceChecksInfo, AgentServiceConnect, AgentServiceConnectProxy,
+    AgentWeights,
+};
+use crate::api::{check::common::AgentServiceCheck, Features};
 use consulrs_derive::QueryEndpoint;
 use derive_builder::Builder;
 use rustify_derive::Endpoint;
@@ -12,12 +15,12 @@ use std::{collections::HashMap, fmt::Debug};
 ///
 /// * Path: agent/services
 /// * Method: GET
-/// * Response: [HashMap<String, ServiceResponse>]
+/// * Response: [HashMap<String, AgentService>]
 /// * Reference: https://www.consul.io/api-docs/agent/service#list-services
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/services",
-    response = "HashMap<String, ServiceResponse>",
+    response = "HashMap<String, AgentService>",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]
@@ -34,12 +37,12 @@ pub struct ListServicesRequest {
 ///
 /// * Path: agent/service/{self.name}
 /// * Method: GET
-/// * Response: [ServiceResponse]
+/// * Response: [AgentService]
 /// * Reference: https://www.consul.io/api-docs/agent/service#get-service-configuration
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/service/{self.name}",
-    response = "ServiceResponse",
+    response = "AgentService",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]
@@ -57,12 +60,12 @@ pub struct ReadServiceRequest {
 ///
 /// * Path: agent/health/service/name/{self.service}
 /// * Method: GET
-/// * Response: [Vec<ServiceCheckResponse>]
+/// * Response: [Vec<AgentServiceChecksInfo>]
 /// * Reference: https://www.consul.io/api-docs/agent/service#get-local-service-health
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/health/service/name/{self.name}",
-    response = "Vec<ServiceCheckResponse>",
+    response = "Vec<AgentServiceChecksInfo>",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]
@@ -80,12 +83,12 @@ pub struct ServiceHealthRequest {
 ///
 /// * Path: agent/health/service/id/{self.id}
 /// * Method: GET
-/// * Response: [Vec<ServiceCheckResponse>]
+/// * Response: [Vec<AgentServiceChecksInfo>]
 /// * Reference: https://www.consul.io/api-docs/agent/service#get-local-service-health-by-its-id
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/health/service/id/{self.id}",
-    response = "Vec<ServiceCheckResponse>",
+    response = "Vec<AgentServiceChecksInfo>",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]
@@ -114,64 +117,22 @@ pub struct RegisterServiceRequest {
     #[endpoint(skip)]
     #[serde(skip)]
     pub features: Option<Features>,
-    pub name: String,
     pub address: Option<String>,
-    pub check: Option<RegisterCheckRequest>,
-    pub checks: Option<Vec<RegisterCheckRequest>>,
-    pub connect: Option<Connect>,
+    pub check: Option<AgentServiceCheck>,
+    pub checks: Option<Vec<AgentServiceCheck>>,
+    pub connect: Option<Box<AgentServiceConnect>>,
     pub enable_tag_override: Option<bool>,
     #[serde(rename = "ID")]
     pub id: Option<String>,
     pub kind: Option<String>,
     pub meta: Option<HashMap<String, String>>,
+    pub name: Option<String>,
     pub ns: Option<String>,
     pub port: Option<u64>,
-    pub proxy: Option<Proxy>,
+    pub proxy: Option<AgentServiceConnectProxy>,
     pub tagged_addresses: Option<HashMap<String, String>>,
     pub tags: Option<Vec<String>>,
-    pub weights: Option<Weight>,
-}
-
-#[derive(Builder, Clone, Debug, Default, Serialize)]
-#[serde(rename_all = "PascalCase")]
-#[builder(setter(into, strip_option), default)]
-pub struct Connect {
-    pub native: Option<bool>,
-    pub sidecar_service: Option<SidecarService>,
-}
-
-#[derive(Clone, Debug, Serialize)]
-pub struct Proxy {
-    pub destination_service_name: String,
-}
-
-#[derive(Builder, Clone, Debug, Default, Serialize)]
-#[builder(setter(into, strip_option), default)]
-#[serde(rename_all = "PascalCase")]
-pub struct Weight {
-    pub passing: Option<String>,
-    pub warning: Option<String>,
-}
-
-#[derive(Builder, Clone, Debug, Default, Serialize)]
-#[serde(rename_all = "PascalCase")]
-#[builder(setter(into, strip_option), default)]
-pub struct SidecarService {
-    pub name: String,
-    pub address: Option<String>,
-    pub check: Option<RegisterCheckRequest>,
-    pub checks: Option<Vec<RegisterCheckRequest>>,
-    pub enable_tag_override: Option<bool>,
-    #[serde(rename = "ID")]
-    pub id: Option<String>,
-    pub kind: Option<String>,
-    pub meta: Option<HashMap<String, String>>,
-    pub ns: Option<String>,
-    pub port: Option<u64>,
-    pub proxy: Option<Proxy>,
-    pub tagged_addresses: Option<HashMap<String, String>>,
-    pub tags: Option<Vec<String>>,
-    pub weights: Option<Weight>,
+    pub weights: Option<AgentWeights>,
 }
 
 /// ## Deregister Service

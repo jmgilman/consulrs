@@ -4,6 +4,7 @@ use crate::{
     api::{
         self,
         service::{
+            common::{AgentService, AgentServiceChecksInfo},
             requests::{
                 DeregisterServiceRequest, DeregisterServiceRequestBuilder,
                 EnableMaintenanceRequest, EnableMaintenanceRequestBuilder, ListServicesRequest,
@@ -11,7 +12,6 @@ use crate::{
                 RegisterServiceRequest, RegisterServiceRequestBuilder, ServiceHealthByIdRequest,
                 ServiceHealthByIdRequestBuilder, ServiceHealthRequest, ServiceHealthRequestBuilder,
             },
-            responses::{ServiceCheckResponse, ServiceResponse},
         },
         ApiResponse,
     },
@@ -41,7 +41,7 @@ pub async fn health(
     client: &impl Client,
     name: &str,
     opts: Option<&mut ServiceHealthRequestBuilder>,
-) -> Result<ApiResponse<Vec<ServiceCheckResponse>>, ClientError> {
+) -> Result<ApiResponse<Vec<AgentServiceChecksInfo>>, ClientError> {
     let mut t = ServiceHealthRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).name(name).build().unwrap();
     api::exec_with_result(client, endpoint).await
@@ -55,7 +55,7 @@ pub async fn health_by_id(
     client: &impl Client,
     id: &str,
     opts: Option<&mut ServiceHealthByIdRequestBuilder>,
-) -> Result<ApiResponse<Vec<ServiceCheckResponse>>, ClientError> {
+) -> Result<ApiResponse<Vec<AgentServiceChecksInfo>>, ClientError> {
     let mut t = ServiceHealthByIdRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).id(id).build().unwrap();
     api::exec_with_result(client, endpoint).await
@@ -68,7 +68,7 @@ pub async fn health_by_id(
 pub async fn list(
     client: &impl Client,
     opts: Option<&mut ListServicesRequestBuilder>,
-) -> Result<ApiResponse<HashMap<String, ServiceResponse>>, ClientError> {
+) -> Result<ApiResponse<HashMap<String, AgentService>>, ClientError> {
     let mut t = ListServicesRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).build().unwrap();
     api::exec_with_result(client, endpoint).await
@@ -102,7 +102,7 @@ pub async fn read(
     client: &impl Client,
     name: &str,
     opts: Option<&mut ReadServiceRequestBuilder>,
-) -> Result<ApiResponse<ServiceResponse>, ClientError> {
+) -> Result<ApiResponse<AgentService>, ClientError> {
     let mut t = ReadServiceRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).name(name).build().unwrap();
     api::exec_with_result(client, endpoint).await

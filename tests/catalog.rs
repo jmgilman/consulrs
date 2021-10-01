@@ -1,10 +1,10 @@
 mod common;
 
-use common::{ConsulServer, ConsulServerHelper};
+use common::{ConsulServer, ConsulServerHelper, CountingServer};
 use consulrs::{
     api::{
         catalog::requests::{DeregisterEntityRequest, RegisterEntityRequest},
-        check::requests::CheckRequestBuilder,
+        check::common::AgentCheckBuilder,
     },
     catalog,
     client::Client,
@@ -16,8 +16,10 @@ fn test() {
     let test = common::new_test();
     test.run(|instance| async move {
         let server: ConsulServer = instance.server();
+        let counting: CountingServer = instance.server();
         let client = server.client();
         let node = server.node().await;
+        common::setup(&client, &counting).await;
 
         test_datacenters(&client).await;
         test_gateway(&client, "test").await;
@@ -78,7 +80,7 @@ async fn test_register(client: &impl Client, node: &str, address: &str) {
         address,
         Some(
             RegisterEntityRequest::builder()
-                .check(CheckRequestBuilder::default().name("test").build().unwrap()),
+                .check(AgentCheckBuilder::default().name("test").build().unwrap()),
         ),
     )
     .await;

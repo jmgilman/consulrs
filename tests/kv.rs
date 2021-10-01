@@ -1,7 +1,7 @@
 mod common;
 
 use common::{ConsulServer, ConsulServerHelper};
-use consulrs::{api::ApiResponse, client::Client, kv};
+use consulrs::{client::Client, kv};
 use serde::{Deserialize, Serialize};
 use test_env_log::test;
 
@@ -40,10 +40,10 @@ async fn test_json(client: &impl Client, key: &str) {
     let res = kv::set_json(client, key, &obj, None).await;
     assert!(res.is_ok());
 
-    let res: Result<ApiResponse<TestObject>, _> = kv::read_json(client, key, None).await;
+    let res = kv::read_json::<TestObject, _>(client, key, None).await;
     assert!(res.is_ok());
 
-    assert_eq!(obj.field, res.unwrap().response.field);
+    assert_eq!(obj.field, res.unwrap().response.value.field);
 }
 
 async fn test_keys(client: &impl Client) {

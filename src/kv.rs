@@ -4,7 +4,7 @@ use crate::{
     api::{
         self,
         kv::{
-            common::KVPair,
+            common::{GenericKVPair, KVPair},
             requests::{
                 DeleteKeyRequest, DeleteKeyRequestBuilder, ReadKeyRequest, ReadKeyRequestBuilder,
                 ReadKeysRequest, ReadKeysRequestBuilder, ReadRawKeyRequest,
@@ -78,21 +78,32 @@ pub async fn read(
 ///
 /// See [ReadKeyRequest]
 #[instrument(skip(client, opts), err)]
-pub async fn read_json<T: DeserializeOwned>(
-    client: &impl Client,
+pub async fn read_json<T: DeserializeOwned, C: Client>(
+    client: &C,
     key: &str,
     opts: Option<&mut ReadKeyRequestBuilder>,
-) -> Result<ApiResponse<T>, ClientError> {
+) -> Result<ApiResponse<GenericKVPair<T>>, ClientError> {
     let mut t = ReadKeyRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).key(key).build().unwrap();
     let mut res = api::exec_with_result(client, endpoint).await?;
 
     if !res.response.is_empty() {
-        let bytes: Vec<u8> = res.response.pop().unwrap().value.try_into()?;
+        let kv = res.response.pop().unwrap();
+        let bytes: Vec<u8> = kv.value.try_into()?;
         let t = serde_json::from_slice(&bytes)
             .map_err(|e| ClientError::JsonDeserializeError { source: e })?;
+        let gkv = GenericKVPair {
+            value: t,
+            create_index: kv.create_index,
+            flags: kv.flags,
+            key: kv.key,
+            lock_index: kv.lock_index,
+            modify_index: kv.modify_index,
+            namespace: kv.namespace,
+            session: kv.session,
+        };
         Ok(ApiResponse {
-            response: t,
+            response: gkv,
             cache: res.cache,
             content_hash: res.content_hash,
             default_acl_policy: res.default_acl_policy,

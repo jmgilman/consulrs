@@ -1,7 +1,7 @@
 use std::convert::TryInto;
 
 use derive_builder::Builder;
-use serde::{Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 use crate::error::ClientError;
@@ -42,4 +42,16 @@ pub struct KVPair {
     pub namespace: Option<String>,
     pub session: Option<String>,
     pub value: Base64String,
+}
+
+#[derive(Debug)]
+pub struct GenericKVPair<T: DeserializeOwned> {
+    pub create_index: u64,
+    pub flags: u64,
+    pub key: String,
+    pub lock_index: u64,
+    pub modify_index: u64,
+    pub namespace: Option<String>,
+    pub session: Option<String>,
+    pub value: T,
 }

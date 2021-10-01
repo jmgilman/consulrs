@@ -83,6 +83,10 @@
 //! // the response back into a UTF-8 encoded string.
 //! let mykey: String = res.response.pop().unwrap().value.unwrap().try_into().unwrap();
 //!
+//! // In most cases, it's easier to just read the raw value
+//! let res = kv::read_raw(&client, "mykey", None).await.unwrap().response;
+//! let mykey = std::str::from_utf8(&res).unwrap();
+//!
 //! assert_eq!(mykey, "myvalue".to_string());
 //! # })
 //! ```

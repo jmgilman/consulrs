@@ -90,9 +90,6 @@ impl MiddleWare for EndpointMiddleware {
             f.process(req);
         }
 
-        let content = std::str::from_utf8(req.body()).unwrap();
-        println!("Content: {}", content);
-
         Ok(())
     }
 

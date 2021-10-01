@@ -73,7 +73,6 @@ pub async fn setup(client: &impl Client, counting: &CountingServer) -> TestServi
     let address = counting.internal_address();
     let port = counting.internal_port;
     let url = counting.internal_url();
-    println! {"URL:  {}", url};
     service::register(
         client,
         SERVICE_NAME,

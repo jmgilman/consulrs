@@ -1,6 +1,6 @@
 use crate::api::Features;
 
-use super::responses::ReadKeyResponse;
+use super::common::KVPair;
 use consulrs_derive::QueryEndpoint;
 use derive_builder::Builder;
 use rustify_derive::Endpoint;
@@ -15,11 +15,7 @@ use std::fmt::Debug;
 /// * Response: [ReadKeyResponse]
 /// * Reference: https://www.consul.io/api-docs/kv#read-key
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
-#[endpoint(
-    path = "kv/{self.key}",
-    response = "Vec<ReadKeyResponse>",
-    builder = "true"
-)]
+#[endpoint(path = "kv/{self.key}", response = "Vec<KVPair>", builder = "true")]
 #[builder(setter(into, strip_option), default)]
 pub struct ReadKeyRequest {
     #[endpoint(skip)]
@@ -42,11 +38,7 @@ pub struct ReadKeyRequest {
 /// * Response: [ReadKeyResponse]
 /// * Reference: https://www.consul.io/api-docs/kv#read-key
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
-#[endpoint(
-    path = "kv/{self.key}",
-    response = "Vec<ReadKeyResponse>",
-    builder = "true"
-)]
+#[endpoint(path = "kv/{self.key}", response = "Vec<u8>", builder = "true")]
 #[builder(setter(into, strip_option), default)]
 pub struct ReadRawKeyRequest {
     #[endpoint(skip)]

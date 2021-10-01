@@ -16,7 +16,7 @@ use futures::future::*;
 use serde::{Deserialize, Serialize};
 use tokio::time::{sleep, Duration};
 
-/// Represents a service in our ficticious example.
+/// Represents a service in our fictitious example.
 struct Node {
     pub client: ConsulClient,
     pub info: NodeInfo,

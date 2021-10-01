@@ -1,11 +1,10 @@
 use crate::api::Features;
 
-use super::responses::AgentCheckResponse;
+use super::common::AgentCheck;
 use consulrs_derive::QueryEndpoint;
 use derive_builder::Builder;
 use rustify_derive::Endpoint;
 use serde::Serialize;
-use serde_with::skip_serializing_none;
 use std::{collections::HashMap, fmt::Debug};
 
 /// ## List Checks
@@ -13,12 +12,12 @@ use std::{collections::HashMap, fmt::Debug};
 ///
 /// * Path: agent/checks
 /// * Method: GET
-/// * Response: [HashMap<String, AgentCheckResponse>]
+/// * Response: [HashMap<String, AgentCheck>]
 /// * Reference: https://www.consul.io/api-docs/catalog#list-services-for-node
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/checks",
-    response = "HashMap<String, AgentCheckResponse>",
+    response = "HashMap<String, AgentCheck>",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]
@@ -208,49 +207,4 @@ pub struct TtlCheckUpdateRequest {
     pub output: Option<String>,
     #[serde(rename = "Status")]
     pub status: Option<String>,
-}
-
-#[skip_serializing_none]
-#[derive(Builder, Clone, Debug, Default, Serialize)]
-#[serde(rename_all = "PascalCase")]
-#[builder(setter(into, strip_option), default)]
-pub struct CheckRequest {
-    #[serde(rename = "CheckID")]
-    pub check_id: Option<String>,
-    pub definition: Option<String>,
-    pub exposed_port: Option<u64>,
-    #[serde(rename = "ID")]
-    pub id: Option<String>,
-    pub name: String,
-    pub namespace: Option<String>,
-    pub node: Option<String>,
-    pub notes: Option<String>,
-    pub output: Option<String>,
-    #[serde(rename = "ServiceID")]
-    pub service_id: Option<String>,
-    pub service_name: Option<String>,
-    pub status: Option<String>,
-    #[serde(rename = "Type")]
-    pub ty: Option<String>,
-}
-
-#[skip_serializing_none]
-#[derive(Builder, Clone, Debug, Default, Serialize)]
-#[serde(rename_all = "PascalCase")]
-#[builder(setter(into, strip_option), default)]
-pub struct CheckDefinitionRequest {
-    pub body: Option<String>,
-    pub deregister_critical_service_after_duration: Option<String>,
-    pub header: Option<HashMap<String, String>>,
-    #[serde(rename = "HTTP")]
-    pub http: Option<String>,
-    pub interval_duration: Option<String>,
-    pub method: Option<String>,
-    pub timeout_duration: Option<String>,
-    #[serde(rename = "TLSServerName")]
-    pub tls_server_name: Option<String>,
-    #[serde(rename = "TLSSkipVerify")]
-    pub tls_skip_verify: Option<bool>,
-    #[serde(rename = "TCP")]
-    pub tcp: Option<String>,
 }

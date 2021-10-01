@@ -1,6 +1,6 @@
 mod common;
 
-use common::{ConsulServer, ConsulServerHelper};
+use common::{ConsulServer, ConsulServerHelper, CountingServer};
 use consulrs::{api::check::requests::RegisterCheckRequest, check, client::Client};
 use test_env_log::test;
 
@@ -9,7 +9,9 @@ fn test() {
     let test = common::new_test();
     test.run(|instance| async move {
         let server: ConsulServer = instance.server();
+        let counting: CountingServer = instance.server();
         let client = server.client();
+        common::setup(&client, &counting).await;
         let name = "test";
 
         test_register(&client, name).await;

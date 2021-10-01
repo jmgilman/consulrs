@@ -1,9 +1,8 @@
-use super::responses::{
-    GatewayServiceResponse, ListNodeServicesResponse, ListNodesForServiceResponse, NodeResponse,
+use super::{
+    common::{CatalogService, Node},
+    responses::{GatewayServiceResponse, ListNodeServicesResponse, ListNodesForServiceResponse},
 };
-use crate::api::{
-    check::requests::CheckRequest, service::requests::RegisterServiceRequest, Features,
-};
+use crate::api::{check::common::AgentCheck, service::common::AgentService, Features};
 use consulrs_derive::QueryEndpoint;
 use derive_builder::Builder;
 use rustify_derive::Endpoint;
@@ -33,12 +32,13 @@ pub struct RegisterEntityRequest {
     pub features: Option<Features>,
     pub node: String,
     pub address: String,
-    pub check: Option<CheckRequest>,
+    pub check: Option<AgentCheck>,
+    pub checks: Option<Vec<AgentCheck>>,
     pub datacenter: Option<String>,
     pub tagged_addresses: Option<HashMap<String, String>>,
     pub node_meta: Option<HashMap<String, String>>,
     pub ns: Option<String>,
-    pub service: Option<RegisterServiceRequest>,
+    pub service: Option<AgentService>,
     pub skip_node_update: Option<bool>,
 }
 
@@ -96,14 +96,10 @@ pub struct ListDatacentersRequest {
 ///
 /// * Path: catalog/nodes
 /// * Method: GET
-/// * Response: [Vec<NodeResponse>]
+/// * Response: [Vec<Node>]
 /// * Reference: https://www.consul.io/api-docs/catalog#list-nodes
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
-#[endpoint(
-    path = "catalog/nodes",
-    response = "Vec<NodeResponse>",
-    builder = "true"
-)]
+#[endpoint(path = "catalog/nodes", response = "Vec<Node>", builder = "true")]
 #[builder(setter(into, strip_option), default)]
 pub struct ListNodesRequest {
     #[endpoint(skip)]
@@ -142,12 +138,12 @@ pub struct ListServicesRequest {
 ///
 /// * Path: catalog/service/{self.service}
 /// * Method: GET
-/// * Response: [Vec<ListNodesForServiceResponse>]
+/// * Response: [Vec<CatalogService>]
 /// * Reference: https://www.consul.io/api-docs/catalog#list-nodes-for-service
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "catalog/service/{self.service}",
-    response = "Vec<ListNodesForServiceResponse>",
+    response = "Vec<CatalogService>",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]

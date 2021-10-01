@@ -1,1 +1,1 @@
-pub mod responses;
+pub mod common;

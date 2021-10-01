@@ -4,6 +4,7 @@ use crate::{
     api::{
         self,
         check::{
+            common::AgentCheck,
             requests::{
                 DeregisterCheckRequest, DeregisterCheckRequestBuilder, ListChecksRequest,
                 ListChecksRequestBuilder, RegisterCheckRequest, RegisterCheckRequestBuilder,
@@ -11,7 +12,6 @@ use crate::{
                 TtlCheckPassRequestBuilder, TtlCheckUpdateRequest, TtlCheckUpdateRequestBuilder,
                 TtlCheckWarnRequest, TtlCheckWarnRequestBuilder,
             },
-            responses::AgentCheckResponse,
         },
         ApiResponse,
     },
@@ -54,7 +54,7 @@ pub async fn fail(
 pub async fn list(
     client: &impl Client,
     opts: Option<&mut ListChecksRequestBuilder>,
-) -> Result<ApiResponse<HashMap<String, AgentCheckResponse>>, ClientError> {
+) -> Result<ApiResponse<HashMap<String, AgentCheck>>, ClientError> {
     let mut t = ListChecksRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).build().unwrap();
     api::exec_with_result(client, endpoint).await

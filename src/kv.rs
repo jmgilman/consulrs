@@ -74,7 +74,7 @@ pub async fn read(
     api::exec_with_result(client, endpoint).await
 }
 
-/// Reads the JSON value at the given key and deserializes it
+/// Reads the JSON value at the given key and deserializes it into an object.
 ///
 /// See [ReadKeyRequest]
 #[instrument(skip(client, opts), err)]
@@ -126,7 +126,7 @@ pub async fn set<'a>(
     api::exec_with_result(client, endpoint).await
 }
 
-/// Sets the value at the given key.
+/// Serializes the given value into JSON and stores it at the given key.
 ///
 /// See [SetKeyRequest]
 #[instrument(skip(client, value, opts), err)]

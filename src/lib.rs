@@ -21,6 +21,7 @@
 //! * [KV Store](https://www.consul.io/api-docs/kv)
 //! * [Services](https://www.consul.io/api-docs/agent/service)
 //! * [Sessions](https://www.consul.io/api-docs/session)
+//! * [Snapshots](https://www.consul.io/api-docs/snapshot)
 //!
 //! Additionally, all optional API features such as consistency modes, blocking,
 //! etc. are also supported.
@@ -172,3 +173,4 @@ pub mod error;
 pub mod kv;
 pub mod service;
 pub mod session;
+pub mod snapshot;

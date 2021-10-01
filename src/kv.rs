@@ -132,7 +132,7 @@ pub async fn read_json_raw<T: DeserializeOwned, C: Client>(
 ) -> Result<ApiResponse<T>, ClientError> {
     let mut t = ReadRawKeyRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).key(key).build().unwrap();
-    let res = api::exec_with_result(client, endpoint).await?;
+    let res = api::exec_with_raw(client, endpoint).await?;
 
     if !res.response.is_empty() {
         let t = serde_json::from_slice(&res.response)

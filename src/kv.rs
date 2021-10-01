@@ -76,6 +76,10 @@ pub async fn read(
 
 /// Reads the JSON value at the given key and deserializes it into an object.
 ///
+/// If the API call returns an empty list then this function will return a
+/// [ClientError::EmptyResponseError]. Note that the function only handles a
+/// single value - only the first element in the list is parsed and returned.
+///
 /// See [ReadKeyRequest]
 #[instrument(skip(client, opts), err)]
 pub async fn read_json<T: DeserializeOwned, C: Client>(

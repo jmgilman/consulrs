@@ -16,6 +16,7 @@ pub mod connect;
 pub mod features;
 pub mod kv;
 pub mod service;
+pub mod session;
 
 #[derive(Builder, Debug)]
 #[builder(pattern = "owned")]

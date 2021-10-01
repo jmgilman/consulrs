@@ -41,7 +41,7 @@ pub struct KVPair {
     pub modify_index: u64,
     pub namespace: Option<String>,
     pub session: Option<String>,
-    pub value: Base64String,
+    pub value: Option<Base64String>,
 }
 
 #[derive(Debug)]

@@ -93,7 +93,7 @@ pub async fn read_json<T: DeserializeOwned, C: Client>(
 
     if !res.response.is_empty() {
         let kv = res.response.pop().unwrap();
-        let bytes: Vec<u8> = kv.value.try_into()?;
+        let bytes: Vec<u8> = kv.value.unwrap().try_into()?;
         let t = serde_json::from_slice(&bytes)
             .map_err(|e| ClientError::JsonDeserializeError { source: e })?;
         let gkv = GenericKVPair {

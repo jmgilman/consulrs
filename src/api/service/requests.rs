@@ -1,5 +1,5 @@
 use super::common::{
-    AgentService, AgentServiceChecksInfo, AgentServiceConnect, AgentServiceConnectProxy,
+    AgentService, AgentServiceAddress, AgentServiceChecksInfo, AgentServiceConnect, AgentServiceConnectProxy,
     AgentWeights,
 };
 use crate::api::{check::common::AgentServiceCheck, Features};
@@ -130,7 +130,7 @@ pub struct RegisterServiceRequest {
     pub ns: Option<String>,
     pub port: Option<u64>,
     pub proxy: Option<AgentServiceConnectProxy>,
-    pub tagged_addresses: Option<HashMap<String, String>>,
+    pub tagged_addresses: Option<HashMap<String, AgentServiceAddress>>,
     pub tags: Option<Vec<String>>,
     pub weights: Option<AgentWeights>,
 }

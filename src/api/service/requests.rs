@@ -1,6 +1,6 @@
 use super::common::{
-    AgentService, AgentServiceAddress, AgentServiceChecksInfo, AgentServiceConnect, AgentServiceConnectProxy,
-    AgentWeights,
+    AgentService, AgentServiceAddress, AgentServiceChecksInfo, AgentServiceConnect,
+    AgentServiceConnectProxy, AgentWeights,
 };
 use crate::api::{check::common::AgentServiceCheck, Features};
 use consulrs_derive::QueryEndpoint;

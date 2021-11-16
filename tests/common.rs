@@ -1,6 +1,11 @@
+use std::collections::HashMap;
+
 use async_trait::async_trait;
 use consulrs::{
-    api::{check::common::AgentServiceCheckBuilder, service::requests::RegisterServiceRequest},
+    api::{
+        check::common::AgentServiceCheckBuilder,
+        service::{common::AgentServiceAddressBuilder, requests::RegisterServiceRequest},
+    },
     catalog,
     client::{Client, ConsulClient, ConsulClientSettingsBuilder},
     service,
@@ -73,6 +78,15 @@ pub async fn setup(client: &impl Client, counting: &CountingServer) -> TestServi
     let address = counting.internal_address();
     let port = counting.internal_port;
     let url = counting.internal_url();
+
+    let mut addresses = HashMap::new();
+    let test_address = AgentServiceAddressBuilder::default()
+        .address("192.168.1.2")
+        .port(1234 as u32)
+        .build()
+        .unwrap();
+    addresses.insert("lan_ipv4".to_string(), test_address);
+
     service::register(
         client,
         SERVICE_NAME,
@@ -80,6 +94,7 @@ pub async fn setup(client: &impl Client, counting: &CountingServer) -> TestServi
             RegisterServiceRequest::builder()
                 .address(address)
                 .port(port)
+                .tagged_addresses(addresses)
                 .check(
                     AgentServiceCheckBuilder::default()
                         .name(CHECK_NAME)

@@ -9,7 +9,7 @@ use consulrs::{
     catalog,
     client::Client,
 };
-use test_env_log::test;
+use test_log::test;
 
 #[test]
 fn test() {

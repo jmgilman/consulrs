@@ -2,7 +2,7 @@ mod common;
 
 use common::{ConsulServer, ConsulServerHelper};
 use consulrs::{api::session::requests::CreateSessionRequest, client::Client, session};
-use test_env_log::test;
+use test_log::test;
 
 #[test]
 fn test() {

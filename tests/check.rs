@@ -2,7 +2,7 @@ mod common;
 
 use common::{ConsulServer, ConsulServerHelper, CountingServer};
 use consulrs::{api::check::requests::RegisterCheckRequest, check, client::Client};
-use test_env_log::test;
+use test_log::test;
 
 #[test]
 fn test() {

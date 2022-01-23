@@ -17,8 +17,8 @@ pub use dockertest_server::servers::hashi::{
 use dockertest_server::Test;
 
 pub const CHECK_NAME: &str = "health";
-pub const CONSUL_PORT: u32 = 9500;
-pub const COUNTING_PORT: u32 = 9100;
+pub const CONSUL_PORT: u32 = 9201;
+pub const COUNTING_PORT: u32 = 9200;
 pub const SERVICE_NAME: &str = "counting";
 pub const VERSION: &str = "1.9.9";
 

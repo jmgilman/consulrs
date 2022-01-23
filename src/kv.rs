@@ -159,7 +159,7 @@ pub async fn read_json_raw<T: DeserializeOwned, C: Client>(
 pub async fn set<'a>(
     client: &'a impl Client,
     key: &'a str,
-    value: &'static [u8],
+    value: &'a [u8],
     opts: Option<&'a mut SetKeyRequestBuilder>,
 ) -> Result<ApiResponse<bool>, ClientError> {
     let mut t = SetKeyRequest::builder();

@@ -47,7 +47,7 @@ impl Features {
     pub fn process(&self, request: &mut Request<Vec<u8>>) {
         let mut query = HashMap::<String, String>::new();
         let mut keys = Vec::<String>::new();
-        info!("Adding features to request");
+        debug!("Adding features to request");
 
         // Blocking Queries
         if let Some(b) = &self.blocking {
@@ -97,7 +97,7 @@ impl Features {
 
         *request.uri_mut() = http::Uri::from_str(url.as_str()).unwrap();
 
-        info!("Final url with features: {}", request.uri());
+        debug!("Final url with features: {}", request.uri());
     }
 
     /// Returns a default instance of [FeaturesBuilder] for configuring features.

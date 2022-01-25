@@ -76,7 +76,7 @@ impl ConsulClient {
                 }
             })?;
 
-            info!("Importing CA certificate from {}", path);
+            debug!("Importing CA certificate from {}", path);
             http_client = http_client.add_root_certificate(cert);
         }
 
@@ -100,7 +100,7 @@ impl ConsulClient {
                 }
             })?;
 
-            info!("Importing client certificate from {}", cert);
+            debug!("Importing client certificate from {}", cert);
             http_client = http_client.identity(id);
         }
 
@@ -152,11 +152,11 @@ impl ConsulClientSettingsBuilder {
     fn default_address(&self) -> String {
         match env::var("CONSUL_HTTP_ADDR") {
             Ok(s) => {
-                info!("Using consul address from $CONSUL_HTTP_ADDR");
+                debug!("Using consul address from $CONSUL_HTTP_ADDR");
                 s
             }
             Err(_) => {
-                info!("Using default consul address http://127.0.0.1:8500");
+                debug!("Using default consul address http://127.0.0.1:8500");
                 String::from("http://127.0.0.1:8500")
             }
         }
@@ -166,12 +166,12 @@ impl ConsulClientSettingsBuilder {
         let mut paths: Vec<String> = Vec::new();
 
         if let Ok(s) = env::var("CONSUL_CACERT") {
-            info!("Found CA certificate in $CONSUL_CACERT");
+            debug!("Found CA certificate in $CONSUL_CACERT");
             paths.push(s);
         }
 
         if let Ok(s) = env::var("CONSUL_CAPATH") {
-            info!("Found CA certificate path in $CONSUL_CAPATH");
+            debug!("Found CA certificate path in $CONSUL_CAPATH");
             if let Ok(p) = fs::read_dir(s) {
                 for path in p {
                     paths.push(path.unwrap().path().to_str().unwrap().to_string())
@@ -185,7 +185,7 @@ impl ConsulClientSettingsBuilder {
     fn default_client_cert(&self) -> Option<String> {
         match env::var("CONSUL_CLIENT_CERT") {
             Ok(s) => {
-                info!("Using TLS client certificate from $CONSUL_CLIENT_CERT");
+                debug!("Using TLS client certificate from $CONSUL_CLIENT_CERT");
                 Some(s)
             }
             Err(_) => {
@@ -198,7 +198,7 @@ impl ConsulClientSettingsBuilder {
     fn default_client_key(&self) -> Option<String> {
         match env::var("CONSUL_CLIENT_KEY") {
             Ok(s) => {
-                info!("Using TLS client key from $CONSUL_CLIENT_KEY");
+                debug!("Using TLS client key from $CONSUL_CLIENT_KEY");
                 Some(s)
             }
             Err(_) => {
@@ -211,18 +211,18 @@ impl ConsulClientSettingsBuilder {
     fn default_token(&self) -> Option<String> {
         match env::var("CONSUL_HTTP_TOKEN") {
             Ok(s) => {
-                info!("Using consul ACL token from $CONSUL_HTTP_TOKEN");
+                debug!("Using consul ACL token from $CONSUL_HTTP_TOKEN");
                 Some(s)
             }
             Err(_) => {
-                info!("Using default empty consul ACL token");
+                debug!("Using default empty consul ACL token");
                 None
             }
         }
     }
 
     fn default_verify(&self) -> bool {
-        info!("Checking TLS verification using $CONSUL_HTTP_SSL_VERIFY");
+        debug!("Checking TLS verification using $CONSUL_HTTP_SSL_VERIFY");
         let verify = env::var("CONSUL_HTTP_SSL_VERIFY").unwrap_or_else(|_| "true".into());
         match verify.as_str() {
             "true" => true,

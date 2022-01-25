@@ -115,7 +115,7 @@ pub async fn exec_with_empty<E>(
 where
     E: Endpoint<Response = ()> + FeaturedEndpoint,
 {
-    info!("Executing {} and expecting no response", endpoint.path());
+    debug!("Executing {} and expecting no response", endpoint.path());
     let features = endpoint.features();
     endpoint
         .with_middleware(&client.middle(features))
@@ -136,7 +136,7 @@ pub async fn exec_with_raw<E>(
 where
     E: Endpoint + FeaturedEndpoint,
 {
-    info!("Executing {} and expecting a response", endpoint.path());
+    debug!("Executing {} and expecting a response", endpoint.path());
     let features = endpoint.features();
     endpoint
         .with_middleware(&client.middle(features))
@@ -161,7 +161,7 @@ pub async fn exec_with_result<E>(
 where
     E: Endpoint + FeaturedEndpoint,
 {
-    info!("Executing {} and expecting a response", endpoint.path());
+    debug!("Executing {} and expecting a response", endpoint.path());
     let features = endpoint.features();
     endpoint
         .with_middleware(&client.middle(features))

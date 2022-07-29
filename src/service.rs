@@ -55,7 +55,7 @@ pub async fn health_by_id(
     client: &impl Client,
     id: &str,
     opts: Option<&mut ServiceHealthByIdRequestBuilder>,
-) -> Result<ApiResponse<Vec<AgentServiceChecksInfo>>, ClientError> {
+) -> Result<ApiResponse<AgentServiceChecksInfo>, ClientError> {
     let mut t = ServiceHealthByIdRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).id(id).build().unwrap();
     api::exec_with_result(client, endpoint).await

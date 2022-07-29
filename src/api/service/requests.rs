@@ -83,12 +83,12 @@ pub struct ServiceHealthRequest {
 ///
 /// * Path: agent/health/service/id/{self.id}
 /// * Method: GET
-/// * Response: [Vec<AgentServiceChecksInfo>]
+/// * Response: [AgentServiceChecksInfo]
 /// * Reference: https://www.consul.io/api-docs/agent/service#get-local-service-health-by-its-id
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/health/service/id/{self.id}",
-    response = "Vec<AgentServiceChecksInfo>",
+    response = "AgentServiceChecksInfo",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]

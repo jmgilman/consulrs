@@ -88,7 +88,7 @@ pub struct ServiceHealthRequest {
 #[derive(Builder, Debug, Default, Endpoint, QueryEndpoint)]
 #[endpoint(
     path = "agent/health/service/id/{self.id}",
-    response = "Vec<AgentServiceChecksInfo>",
+    response = "AgentServiceChecksInfo",
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]

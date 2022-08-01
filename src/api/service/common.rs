@@ -30,9 +30,18 @@ pub struct AgentService {
     pub proxy: Option<AgentServiceConnectProxy>,
     pub service: Option<String>,
     pub socket_path: Option<String>,
-    pub tagged_addresses: Option<HashMap<String, String>>,
+    pub tagged_addresses: Option<HashMap<String, AgentServiceTaggedAddress>>,
     pub tags: Option<Vec<String>>,
     pub weights: Option<AgentWeights>,
+}
+
+#[skip_serializing_none]
+#[derive(Builder, Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
+#[builder(setter(into, strip_option), default)]
+pub struct AgentServiceTaggedAddress {
+    pub address: Option<String>,
+    pub port: Option<u64>,
 }
 
 #[skip_serializing_none]

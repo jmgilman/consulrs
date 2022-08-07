@@ -12,6 +12,7 @@ pub use crate::api::features::Features;
 
 pub mod catalog;
 pub mod check;
+pub mod health;
 pub mod connect;
 pub mod features;
 pub mod kv;

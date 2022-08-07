@@ -174,6 +174,7 @@ pub mod catalog;
 pub mod check;
 pub mod client;
 pub mod error;
+pub mod health;
 pub mod kv;
 pub mod service;
 pub mod session;

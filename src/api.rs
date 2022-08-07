@@ -14,6 +14,7 @@ pub mod catalog;
 pub mod check;
 pub mod connect;
 pub mod features;
+pub mod health;
 pub mod kv;
 pub mod service;
 pub mod session;

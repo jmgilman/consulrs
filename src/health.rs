@@ -3,9 +3,7 @@ use crate::{
         self,
         health::{
             common::HealthServiceChecksInfo,
-            requests::{
-                ListNodesForServiceRequest, ListNodesForServiceRequestBuilder,
-            },
+            requests::{ListNodesForServiceRequest, ListNodesForServiceRequestBuilder},
         },
         ApiResponse,
     },

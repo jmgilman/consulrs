@@ -4,7 +4,7 @@ use serde_with::skip_serializing_none;
 use std::fmt::Debug;
 
 use crate::api::{
-    check::common::HealthCheck, service::common::AgentService, catalog::common::Node,
+    catalog::common::Node, check::common::HealthCheck, service::common::AgentService,
 };
 
 #[skip_serializing_none]

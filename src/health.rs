@@ -4,7 +4,7 @@ use crate::{
         health::{
             common::HealthServiceChecksInfo,
             requests::{
-                ListServiceHealthRequest, ListServiceHealthRequestBuilder,
+                ListNodesForServiceRequest, ListNodesForServiceRequestBuilder,
             },
         },
         ApiResponse,
@@ -15,14 +15,14 @@ use crate::{
 
 /// List Service Instances for Service.
 ///
-/// See [ListServiceHealthRequest]
+/// See [ListNodesForServiceRequest]
 #[instrument(skip(client, opts), err)]
-pub async fn list_service_instances(
+pub async fn list_nodes_for_service(
     client: &impl Client,
     service: &str,
-    opts: Option<&mut ListServiceHealthRequestBuilder>,
+    opts: Option<&mut ListNodesForServiceRequestBuilder>,
 ) -> Result<ApiResponse<Vec<HealthServiceChecksInfo>>, ClientError> {
-    let mut t = ListServiceHealthRequest::builder();
+    let mut t = ListNodesForServiceRequest::builder();
     let endpoint = opts.unwrap_or(&mut t).service(service).build().unwrap();
     api::exec_with_result(client, endpoint).await
 }

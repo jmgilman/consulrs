@@ -20,7 +20,7 @@ use std::fmt::Debug;
     builder = "true"
 )]
 #[builder(setter(into, strip_option), default)]
-pub struct ListServiceHealthRequest {
+pub struct ListNodesForServiceRequest {
     #[endpoint(skip)]
     pub features: Option<Features>,
     #[endpoint(skip)]

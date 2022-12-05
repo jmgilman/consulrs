@@ -109,7 +109,9 @@ pub struct SetKeyRequest {
     #[endpoint(query)]
     pub acquire: Option<String>,
     #[endpoint(query)]
-    pub cas: Option<u64>,
+    pub cas: Option<bool>,
+    #[endpoint(query)]
+    pub modify_index: Option<u64>,
     #[endpoint(query)]
     pub dc: Option<String>,
     #[endpoint(query)]

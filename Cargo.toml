@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/jmgilman/consulrs"
 keywords = ["Consul", "API", "Client", "Hashicorp"]
-edition = "2018"
+edition = "2021"
 
 [workspace]
 members = [
@@ -15,26 +15,26 @@ members = [
 ]
 
 [dependencies]
-async-trait = "0.1.51"
-base64 = "0.13.0"
-consulrs_derive = { version = "0.1.0", path = "consulrs_derive" }
-derive_builder = "0.10.2"
-http = "0.2.5"
-reqwest = { version = "0.11.4", default-features = false, features = ["rustls-tls"] }
-rustify = "0.5.2"
+async-trait = "0.1.64"
+base64 = "0.21.0"
+consulrs_derive = { path = "consulrs_derive" }
+derive_builder = "0.12.0"
+http = "0.2.8"
+reqwest = { version = "0.11.14", default-features = false, features = ["rustls-tls"] }
+rustify = {version = "0.5.3", default-features = false, features = ["rustls-tls"]}
 rustify_derive = "0.5.2"
-serde = "1.0.130"
-serde_json = "1.0.66"
-serde_with = "1.10.0"
-thiserror = "1.0.29"
-tracing = "0.1.28"
-url = "2.2.2"
+serde = "1.0.152"
+serde_json = "1.0.93"
+serde_with = "2.2.0"
+thiserror = "1.0.38"
+tracing = "0.1.37"
+url = "2.3.1"
 
 [dev-dependencies]
 dockertest-server = { version = "0.1.4", features=["hashi"] }
-env_logger = "0.9.0"
-futures = "0.3.17"
-test-log = { version = "0.2.8", features = ["trace"] }
-tokio = { version = "1.12.0", features = ["full"] }
+env_logger = "0.10.0"
+futures = "0.3.26"
+test-log = { version = "0.2.11", features = ["trace"] }
+tokio = { version = "1.25.0", features = ["full"] }
 tokio-test = "0.4.2"
-tracing-subscriber = {version = "0.2.17", default-features = false, features = ["env-filter", "fmt"]}
+tracing-subscriber = {version = "0.3.16", default-features = false, features = ["env-filter", "fmt"]}

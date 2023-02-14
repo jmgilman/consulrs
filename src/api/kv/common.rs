@@ -1,5 +1,6 @@
 use std::convert::TryInto;
 
+use base64::{engine::general_purpose, Engine as _};
 use derive_builder::Builder;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -14,7 +15,9 @@ impl TryInto<Vec<u8>> for Base64String {
     type Error = ClientError;
 
     fn try_into(self) -> Result<Vec<u8>, Self::Error> {
-        base64::decode(&self.0).map_err(|e| ClientError::Base64DecodeError { source: e })
+        general_purpose::STANDARD
+            .decode(self.0.as_bytes())
+            .map_err(|e| ClientError::Base64DecodeError { source: e })
     }
 }
 

@@ -65,7 +65,7 @@ impl ConsulClient {
 
         // Adds CA certificates
         for path in &settings.ca_certs {
-            let content = std::fs::read(&path).map_err(|e| ClientError::FileReadError {
+            let content = std::fs::read(path).map_err(|e| ClientError::FileReadError {
                 source: e,
                 path: path.clone(),
             })?;
@@ -83,12 +83,12 @@ impl ConsulClient {
         // Add client certificate
         if let (Some(cert), Some(key)) = (&settings.client_cert, &settings.client_key) {
             let cert_content =
-                std::fs::read_to_string(&cert).map_err(|e| ClientError::FileReadError {
+                std::fs::read_to_string(cert).map_err(|e| ClientError::FileReadError {
                     source: e,
                     path: cert.clone(),
                 })?;
             let key_content =
-                std::fs::read_to_string(&key).map_err(|e| ClientError::FileReadError {
+                std::fs::read_to_string(key).map_err(|e| ClientError::FileReadError {
                     source: e,
                     path: key.clone(),
                 })?;

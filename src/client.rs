@@ -80,7 +80,8 @@ impl ConsulClient {
             http_client = http_client.add_root_certificate(cert);
         }
 
-        // Add client certificate
+        // Add support for client certificates if rustls-tls is enabled.
+        #[cfg(feature = "rustls-tls")]
         if let (Some(cert), Some(key)) = (&settings.client_cert, &settings.client_key) {
             let cert_content =
                 std::fs::read_to_string(&cert).map_err(|e| ClientError::FileReadError {
@@ -122,8 +123,8 @@ impl ConsulClient {
 ///
 /// * `address`: CONSUL_HTTP_ADDR
 /// * `ca_certs`: CONSUL_CACERT / CONSUL_CAPATH
-/// * `client_cert`: CONSUL_CLIENT_CERT
-/// * `client_key`: CONSUL_CLIENT_KEY
+/// * `client_cert`: CONSUL_CLIENT_CERT, requires `rustls-tls` feature.
+/// * `client_key`: CONSUL_CLIENT_KEY, requires `rustls-tls` feature.
 /// * `token`: CONSUL_HTTP_TOKEN
 /// * `verify`: CONSUL_HTTP_SSL_VERIFY
 ///
@@ -136,8 +137,10 @@ pub struct ConsulClientSettings {
     pub address: String,
     #[builder(default = "self.default_ca_certs()")]
     pub ca_certs: Vec<String>,
+    #[cfg(feature = "rustls-tls")]
     #[builder(default = "self.default_client_cert()")]
     pub client_cert: Option<String>,
+    #[cfg(feature = "rustls-tls")]
     #[builder(default = "self.default_client_key()")]
     pub client_key: Option<String>,
     #[builder(setter(into), default = "self.default_token()")]
@@ -182,6 +185,7 @@ impl ConsulClientSettingsBuilder {
         paths
     }
 
+    #[cfg(feature = "rustls-tls")]
     fn default_client_cert(&self) -> Option<String> {
         match env::var("CONSUL_CLIENT_CERT") {
             Ok(s) => {
@@ -195,6 +199,7 @@ impl ConsulClientSettingsBuilder {
         }
     }
 
+    #[cfg(feature = "rustls-tls")]
     fn default_client_key(&self) -> Option<String> {
         match env::var("CONSUL_CLIENT_KEY") {
             Ok(s) => {

@@ -41,4 +41,4 @@ tracing-subscriber = {version = "0.2.17", default-features = false, features = [
 
 [features]
 default = ["reqwest/default-tls"]
-rustls-tls = ["reqwest/rustls-tls"]
+rustls-tls = ["reqwest/rustls-tls", "rustify/rustls-tls"]

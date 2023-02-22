@@ -40,5 +40,5 @@ tokio-test = "0.4.2"
 tracing-subscriber = {version = "0.2.17", default-features = false, features = ["env-filter", "fmt"]}
 
 [features]
-default = ["reqwest/default-tls"]
+default = ["reqwest/default-tls", "rustify/default"]
 rustls-tls = ["reqwest/rustls-tls", "rustify/rustls-tls"]

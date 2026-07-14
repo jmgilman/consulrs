@@ -1,4 +1,5 @@
 use proc_macro2::Span;
+use quote::quote_spanned;
 
 /// The general error object returned by functions in this crate.
 ///
@@ -14,7 +15,7 @@ impl Error {
     /// This uses [quote_spanned!] in order to provide more accurate information
     /// to the compiler about the exact location of the error.
     pub fn new(span: Span, message: &str) -> Error {
-        Error(quote_spanned! { span =>
+        Error(quote_spanned! {span=>
             compile_error!(#message);
         })
     }

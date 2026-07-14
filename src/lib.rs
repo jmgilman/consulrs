@@ -173,6 +173,7 @@ pub mod api;
 pub mod catalog;
 pub mod check;
 pub mod client;
+pub mod configuration;
 pub mod error;
 pub mod health;
 pub mod kv;

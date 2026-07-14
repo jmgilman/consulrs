@@ -12,6 +12,7 @@ pub use crate::api::features::Features;
 
 pub mod catalog;
 pub mod check;
+pub mod configuration;
 pub mod connect;
 pub mod features;
 pub mod health;
@@ -205,7 +206,7 @@ where
 }
 
 /// Parses commonly found header fields out of response headers.
-fn parse_headers<T>(headers: &http::HeaderMap) -> ApiResponseBuilder<T>
+fn parse_headers<T>(headers: &reqwest::header::HeaderMap) -> ApiResponseBuilder<T>
 where
     T: DeserializeOwned + Send + Sync,
 {

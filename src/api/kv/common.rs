@@ -14,7 +14,8 @@ impl TryInto<Vec<u8>> for Base64String {
     type Error = ClientError;
 
     fn try_into(self) -> Result<Vec<u8>, Self::Error> {
-        base64::decode(&self.0).map_err(|e| ClientError::Base64DecodeError { source: e })
+        base64::Engine::decode(&base64::engine::general_purpose::STANDARD, self.0)
+            .map_err(|e| ClientError::Base64DecodeError { source: e })
     }
 }
 

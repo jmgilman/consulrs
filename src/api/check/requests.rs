@@ -77,7 +77,7 @@ pub struct RegisterCheckRequest {
     #[serde(rename = "TLSServerName")]
     pub tls_server_name: Option<String>,
     #[serde(rename = "TLSSkipVerify")]
-    pub tls_skip_verify: Option<String>,
+    pub tls_skip_verify: Option<bool>,
     #[serde(rename = "TTL")]
     pub ttl: Option<String>,
 }
